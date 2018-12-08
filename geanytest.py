@@ -2,6 +2,9 @@ import numpy as np
 import cv2 as cv
 from matplotlib import pyplot as plt
 
+searchBoxX = 10
+searchBoxY = 3
+        
 def draw_circle(event,x,y,flags,param):
     if event == cv.EVENT_LBUTTONDBLCLK:
         cv.circle(img,(x,y),100,(255,0,0),-1)
@@ -31,16 +34,46 @@ def draw_circle(event,x,y,flags,param):
 #~ cv.destroyAllWindows()
 
 #~ img = cv.imread('door_open.jpg',0)
-img = cv.imread('door_closed.jpg')
-cv.circle(img, (303, 52), 5, (0, 255, 0), 1)
+#~ img = cv.imread('door_closed.jpg')
 
 
+def getAverageColorOfBox(fileName, x, y):
+        img = cv.imread(fileName)
+        sumR = 0
+        sumG = 0
+        sumB = 0
+
+        for pixelX in range(x - searchBoxX, x + searchBoxX + 1):
+                for pixelY in range(y - searchBoxY, y + searchBoxY + 1):
+                        sumR += img[y, x, 0]
+                        sumG += img[y, x, 1]
+                        sumB += img[y, x, 2]
+                        #~ print img[y, x, 0], img[y, x, 1], img[y, x, 2]
+        factor = (2 * searchBoxX + 1)  * (2 * searchBoxY + 1)
+        sumR /= factor
+        sumG /= factor
+        sumB /= factor
+        
+        print sumR, sumG, sumB
+        
+        cv.rectangle(img, (x - searchBoxX, y - searchBoxY), (x + searchBoxX, y + searchBoxY), (0, 255, 0), 1)
 
 
-cv.namedWindow('image')
-cv.setMouseCallback('image',draw_circle)
-cv.imshow('image',img)
-cv.waitKey(0)
-cv.destroyAllWindows()
+        cv.namedWindow('image')
+        cv.setMouseCallback('image',draw_circle)
+        cv.imshow('image',img)
+        cv.waitKey(0)
+        cv.destroyAllWindows()
+
+
+getAverageColorOfBox('door_open.jpg', 303, 52)
+getAverageColorOfBox('door_closed.jpg', 303, 52)
+#~ img = cv.imread('door_open.jpg')
+#~ x = 303
+#~ y = 52
+#~ radius = 0
+#~ thickness = 1
+#~ cv.circle(img, (x, y), radius, (0, 255, 0), 1)
+
 
 
