@@ -1,15 +1,18 @@
 import numpy as np
 import cv2 as cv
 from matplotlib import pyplot as plt
+import math
 
 searchBoxX = 10
 searchBoxY = 3
+img = np.zeros((1,1,3), np.uint8)
         
 def draw_circle(event,x,y,flags,param):
     if event == cv.EVENT_LBUTTONDBLCLK:
         cv.circle(img,(x,y),100,(255,0,0),-1)
         print 'clicked: ({}, {})'.format(x, y)
-        
+
+
 #~ # Create a black image
 #~ img = np.zeros((512,512,3), np.uint8)
 #~ # Draw a diagonal blue line with thickness of 5 px
@@ -54,7 +57,7 @@ def getAverageColorOfBox(fileName, x, y):
         sumG /= factor
         sumB /= factor
         
-        print sumR, sumG, sumB
+        #~ print sumR, sumG, sumB
         
         cv.rectangle(img, (x - searchBoxX, y - searchBoxY), (x + searchBoxX, y + searchBoxY), (0, 255, 0), 1)
 
@@ -64,10 +67,31 @@ def getAverageColorOfBox(fileName, x, y):
         cv.imshow('image',img)
         cv.waitKey(0)
         cv.destroyAllWindows()
+        return sumR, sumG, sumB
 
+def getColorDist(r0, g0, b0, r1, g1, b1):
+        return math.sqrt((r0 - r1)**2 + (g0 - g1)**2 + (b0 - b1)**2)
 
-getAverageColorOfBox('door_open.jpg', 303, 52)
-getAverageColorOfBox('door_closed.jpg', 303, 52)
+openR, openG, openB = getAverageColorOfBox('door_open.jpg', 303, 52)
+closeR, closeG, closeB = getAverageColorOfBox('door_closed.jpg', 303, 52)
+print 'average open: {}, {}, {}'.format(openR, openG, openB)
+print 'average close: {}, {}, {}'.format(closeR, closeG, closeB)
+
+#~ testR, testG, testB = getAverageColorOfBox('test_open.jpg', 303, 52)
+testR, testG, testB = getAverageColorOfBox('test_closed.jpg', 303, 52)
+print 'average test: {}, {}, {}'.format(testR, testG, testB)
+
+openDist = getColorDist(testR, testG, testB, openR, openG, openB)
+closeDist = getColorDist(testR, testG, testB, closeR, closeG, closeB)
+print 'open dist: {}'.format(openDist)
+print 'close dist: {}'.format(closeDist)
+if openDist < closeDist:
+        print 'door is open'
+else:
+        print 'door is closed'
+                
+        
+
 #~ img = cv.imread('door_open.jpg')
 #~ x = 303
 #~ y = 52
