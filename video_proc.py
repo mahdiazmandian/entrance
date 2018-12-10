@@ -5,7 +5,7 @@ import time
 import cv2
 import datetime
 import time
-
+import os
 
 testMode = True
 
@@ -59,6 +59,10 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
 	# if the `q` key was pressed, break from the loop
 	if key == ord("q"):
 		break
+		
+	if key == ord("p"):
+		file = "kanye-west-power-intro.wav"
+		os.system("omxplayer --no-keys {} &".format(file))
 
 	# DO SAMPLING HERE
 	
@@ -75,6 +79,3 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
  
 	# clear the stream in preparation for the next frame
 	rawCapture.truncate(0)
-
-		
-	
