@@ -97,7 +97,9 @@ else:
 #~ y = 52
 #~ radius = 0
 #~ thickness = 1
-#~ cv.circle(img, (x, y), radius, (0, 255, 0), 1)
+#~ cv.circle(img, (x, y), radius, (0, 255, 0), 1)testR, testG, testB = getAverageColorOfBox('test_open.jpg', 303, 52)
+
+
 
 
 
