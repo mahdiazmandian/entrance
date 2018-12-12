@@ -2,19 +2,18 @@
 import socket
 import time
 
-# Create a socket object
-s = socket.socket()
+port = 65432
+addr = '127.0.0.1'
 
-# Define the port on which you want to connect
-port = 12345
-
-# connect to the server on local computer
-s.connect(('127.0.0.1', port))
+def sendBadgeInfo (badgeID):
+    s = socket.socket()
+    s.connect((addr, port))
+    s.send(badgeID)
+    print "sent badge ID {}".format(badgeID)
+    s.close()
 
 while True:
-
-    s.send("Badge Number: 123456")
-    print "sent message"
+    sendBadgeInfo('876543')
     time.sleep(3)
 # # close the connection
 # s.close()
