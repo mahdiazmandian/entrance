@@ -1,4 +1,5 @@
 import subprocess, time, win32com.client as wincl, socket
+from threading import Thread
 
 port = 65432
 addr = '127.0.0.1'
@@ -39,7 +40,9 @@ while True:
         s = s.replace(" ", "")
         s = s[:8]
         print "Badge Read: {}".format(s)
+        Thread(target=send_badge_info, args=(s,)).start()
+        # send_badge_info(s)
         say_name_of_id(s)
-        send_badge_info(s)
+
         # PROCESS BADGE DATA HERE
         # time.sleep(0.8)
