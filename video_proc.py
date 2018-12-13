@@ -7,7 +7,7 @@ import datetime
 import time
 import os
 
-testMode = True
+testMode = False
 
 # initialize the camera and grab a reference to the raw camera capture
 #~ resX = 3280
