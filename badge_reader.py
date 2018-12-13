@@ -1,9 +1,15 @@
 import subprocess, time, win32com.client as wincl, socket
 from threading import Thread
 
-port = 65432
-addr = '127.0.0.1'
 
+test_locally = True
+
+
+port = 65432
+addr = '127.0.0.1' if test_locally else '172.26.204.205'
+# addr = '172.26.204.205'
+
+print addr
 
 def send_badge_info(badge_id):
     s = socket.socket()
