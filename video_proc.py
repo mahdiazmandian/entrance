@@ -9,6 +9,13 @@ import os
 
 testMode = False
 
+
+# mouse callback function
+def draw_circle(event,x,y,flags,param):
+    if event == cv2.EVENT_LBUTTONDBLCLK:
+        #~ cv.circle(img,(x,y),100,(255,0,0),-1)
+        print 'clicked: ({}, {})'.format(x, y)
+
 # initialize the camera and grab a reference to the raw camera capture
 #~ resX = 3280
 #~ resY = 2464
@@ -41,6 +48,10 @@ else:
 	print "Warning, in test mode. Images not consistent."
  
 font = cv2.FONT_HERSHEY_SIMPLEX
+
+
+
+
 
 door1open = False
 door2open = True
@@ -78,6 +89,7 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
  
 	# show the frame
 	cv2.imshow("Frame", image)
+	cv2.setMouseCallback("Frame",draw_circle)
  
 	# clear the stream in preparation for the next frame
 	rawCapture.truncate(0)

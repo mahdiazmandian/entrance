@@ -9,8 +9,23 @@ img = np.zeros((1,1,3), np.uint8)
 
 dummy_img = np.zeros((1,1,3), np.uint8)
 
+door1MidX = 175
+door1MidY = 451
+box1X = 5
+box1Y = 10
 
-def check_open_door(door_num, midX, midY, boxX, boxY):
+door2MidX = 964
+door2MidY = 576
+box2X = 5
+box2Y = 10
+
+door3MidX = 1381
+door3MidY = 597
+box3X = 5
+box3Y = 10
+
+
+def get_door_ref_colors(door_num, midX, midY, boxX, boxY):
         filename = ''
         
         if door_num == 1:
@@ -38,7 +53,9 @@ def check_open_door(door_num, midX, midY, boxX, boxY):
         #~ else:
                 #~ print 'door is closed'
         return (openR, openG, openB), (closeR, closeG, closeB)
-        
+
+
+#~ def check_door_open(door_num)
         
 def draw_circle(event,x,y,flags,param):
     if event == cv.EVENT_LBUTTONDBLCLK:
@@ -107,8 +124,10 @@ def getColorDist(r0, g0, b0, r1, g1, b1):
         return math.sqrt((r0 - r1)**2 + (g0 - g1)**2 + (b0 - b1)**2)
 
 
-check_open_door(1, 20, 30, 10, 6)
-        
+# Initialization
+col_open1, col_close1 = get_door_ref_colors(1, door1MidX, door1MidY, box1X, box1Y)
+col_open2, col_close2 = get_door_ref_colors(2, door2MidX, door2MidY, box2X, box2Y)
+col_open3, col_close3 = get_door_ref_colors(3, door3MidX, door3MidY, box3X, box3Y)
 
 #~ img = cv.imread('door_open.jpg')
 #~ x = 303
