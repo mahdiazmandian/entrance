@@ -1,21 +1,39 @@
-import subprocess, time, win32com.client as wincl
+import subprocess, time, win32com.client as wincl, socket
+from threading import Thread
 
 
-mahdi_id ='6044779E'
+test_locally = True
+
+
+port = 65432
+addr = '127.0.0.1' if test_locally else '172.26.204.205'
+# addr = '172.26.204.205'
+
+print addr
+
+def send_badge_info(badge_id):
+    s = socket.socket()
+    s.connect((addr, port))
+    s.send(badge_id)
+    print "sent badge ID {}".format(badge_id)
+    s.close()
+
+
+mahdi_id = '6044779E'
 katrine_id = 'C87FA30C'
 nick_id = '6044779E'
 
-def sayNameOfID (id):
+
+def say_name_of_id(id_num):
     name = 'Guest'
-    if id == mahdi_id:
+    if id_num == mahdi_id:
         name = 'Matty'
-    elif id == katrine_id:
+    elif id_num == katrine_id:
         name = 'Katrin'
-    elif id == nick_id:
+    elif id_num == nick_id:
         name = 'Nick'
     speak = wincl.Dispatch("SAPI.SpVoice")
     speak.Speak("Welcome {}".format(name))
-
 
 
 while True:
@@ -28,6 +46,9 @@ while True:
         s = s.replace(" ", "")
         s = s[:8]
         print "Badge Read: {}".format(s)
-        sayNameOfID(s)
+        Thread(target=send_badge_info, args=(s,)).start()
+        # send_badge_info(s)
+        say_name_of_id(s)
+
         # PROCESS BADGE DATA HERE
         # time.sleep(0.8)
