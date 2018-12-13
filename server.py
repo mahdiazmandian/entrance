@@ -28,12 +28,11 @@ while True:
     c, addr = s.accept()
     print 'Got connection from', addr
 
-    while True:
-        try:
-            data = c.recv(1024)
-            print data
-        except:
-            print "client left"
-            break
+    try:
+        data = c.recv(1024)
+        print data
+    except:
+        print "client left"
+        break
     # # Close the connection with the client
-    # c.close()
+    c.close()
