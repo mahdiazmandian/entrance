@@ -3,9 +3,42 @@ import cv2 as cv
 from matplotlib import pyplot as plt
 import math
 
-searchBoxX = 10
-searchBoxY = 3
+#searchBoxX = 10
+#searchBoxY = 3
 img = np.zeros((1,1,3), np.uint8)
+
+dummy_img = np.zeros((1,1,3), np.uint8)
+
+
+def check_open_door(door_num, midX, midY, boxX, boxY):
+        filename = ''
+        
+        if door_num == 1:
+                filename = 'door1_open.jpg'
+        elif door_num == 2:
+                filename = 'door2_open.jpg'
+        else:
+                filename = 'door3_open.jpg'
+                
+        openR, openG, openB = getAverageColorOfBox(filename, dummy_img, midX, midY, boxX, boxY)
+        closeR, closeG, closeB = getAverageColorOfBox('doors_closed.jpg', dummy_img, midX, midY, boxX, boxY)
+        print 'average open: {}, {}, {}'.format(openR, openG, openB)
+        print 'average close: {}, {}, {}'.format(closeR, closeG, closeB)
+
+        #~ testR, testG, testB = getAverageColorOfBox('test_open.jpg', 303, 52)
+        #~ testR, testG, testB = getAverageColorOfBox('test_closed.jpg', 303, 52)
+        #~ print 'average test: {}, {}, {}'.format(testR, testG, testB)
+
+        #~ openDist = getColorDist(testR, testG, testB, openR, openG, openB)
+        #~ closeDist = getColorDist(testR, testG, testB, closeR, closeG, closeB)
+        #~ print 'open dist: {}'.format(openDist)
+        #~ print 'close dist: {}'.format(closeDist)
+        #~ if openDist < closeDist:
+                #~ print 'door is open'
+        #~ else:
+                #~ print 'door is closed'
+        return (openR, openG, openB), (closeR, closeG, closeB)
+        
         
 def draw_circle(event,x,y,flags,param):
     if event == cv.EVENT_LBUTTONDBLCLK:
@@ -40,8 +73,9 @@ def draw_circle(event,x,y,flags,param):
 #~ img = cv.imread('door_closed.jpg')
 
 
-def getAverageColorOfBox(fileName, x, y):
-        img = cv.imread(fileName)
+def getAverageColorOfBox(fileName, img, x, y, searchBoxX, searchBoxY):
+        if not fileName == '':
+                img = cv.imread(fileName)
         sumR = 0
         sumG = 0
         sumB = 0
@@ -72,24 +106,8 @@ def getAverageColorOfBox(fileName, x, y):
 def getColorDist(r0, g0, b0, r1, g1, b1):
         return math.sqrt((r0 - r1)**2 + (g0 - g1)**2 + (b0 - b1)**2)
 
-openR, openG, openB = getAverageColorOfBox('door_open.jpg', 303, 52)
-closeR, closeG, closeB = getAverageColorOfBox('door_closed.jpg', 303, 52)
-print 'average open: {}, {}, {}'.format(openR, openG, openB)
-print 'average close: {}, {}, {}'.format(closeR, closeG, closeB)
 
-#~ testR, testG, testB = getAverageColorOfBox('test_open.jpg', 303, 52)
-testR, testG, testB = getAverageColorOfBox('test_closed.jpg', 303, 52)
-print 'average test: {}, {}, {}'.format(testR, testG, testB)
-
-openDist = getColorDist(testR, testG, testB, openR, openG, openB)
-closeDist = getColorDist(testR, testG, testB, closeR, closeG, closeB)
-print 'open dist: {}'.format(openDist)
-print 'close dist: {}'.format(closeDist)
-if openDist < closeDist:
-        print 'door is open'
-else:
-        print 'door is closed'
-                
+check_open_door(1, 20, 30, 10, 6)
         
 
 #~ img = cv.imread('door_open.jpg')
