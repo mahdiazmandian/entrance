@@ -99,14 +99,16 @@ def getAverageColorOfBox(fileName, img, x, y, searchBoxX, searchBoxY):
 
         for pixelX in range(x - searchBoxX, x + searchBoxX + 1):
                 for pixelY in range(y - searchBoxY, y + searchBoxY + 1):
-                        sumR += img[y, x, 0]
-                        sumG += img[y, x, 1]
-                        sumB += img[y, x, 2]
+                        sumR += img[pixelY, pixelX, 0]
+                        sumG += img[pixelY, pixelX, 1]
+                        sumB += img[pixelY, pixelX, 2]
                         #~ print img[y, x, 0], img[y, x, 1], img[y, x, 2]
         factor = (2 * searchBoxX + 1)  * (2 * searchBoxY + 1)
         sumR /= factor
         sumG /= factor
         sumB /= factor
+        
+        print "Mid Color: ({}, {}, {})".format(img[y, x, 0], img[y, x, 1], img[y, x, 2])
         
         #~ print sumR, sumG, sumB
         
@@ -126,8 +128,8 @@ def getColorDist(r0, g0, b0, r1, g1, b1):
 
 # Initialization
 col_open1, col_close1 = get_door_ref_colors(1, door1MidX, door1MidY, box1X, box1Y)
-col_open2, col_close2 = get_door_ref_colors(2, door2MidX, door2MidY, box2X, box2Y)
-col_open3, col_close3 = get_door_ref_colors(3, door3MidX, door3MidY, box3X, box3Y)
+#~ col_open2, col_close2 = get_door_ref_colors(2, door2MidX, door2MidY, box2X, box2Y)
+#~ col_open3, col_close3 = get_door_ref_colors(3, door3MidX, door3MidY, box3X, box3Y)
 
 #~ img = cv.imread('door_open.jpg')
 #~ x = 303
