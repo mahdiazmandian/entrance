@@ -2,7 +2,7 @@ import subprocess, time, win32com.client as wincl, socket
 from threading import Thread
 
 
-test_locally = True
+test_locally = False
 
 
 port = 65432
@@ -21,7 +21,7 @@ def send_badge_info(badge_id):
 
 mahdi_id = '6044779E'
 katrine_id = 'C87FA30C'
-nick_id = '6044779E'
+mario_id = '51F0A30C'
 
 
 def say_name_of_id(id_num):
@@ -30,8 +30,8 @@ def say_name_of_id(id_num):
         name = 'Matty'
     elif id_num == katrine_id:
         name = 'Katrin'
-    elif id_num == nick_id:
-        name = 'Nick'
+    elif id_num == mario_id:
+        name = 'Mario'
     speak = wincl.Dispatch("SAPI.SpVoice")
     speak.Speak("Welcome {}".format(name))
 
