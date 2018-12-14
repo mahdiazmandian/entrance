@@ -13,6 +13,7 @@ from fractions import Fraction
 import socket, time
 from threading import Thread
 from playsound import playsound
+import Queue
 
 verbose = False
 
@@ -20,6 +21,7 @@ badge_read_pending = False
 last_badge_timestamp = -1
 buffer_wait_time = 20 #wait this long after badge is scanned to look trigger song
 
+q = Queue.Queue()
 
 def badge_listen():
 
@@ -56,6 +58,8 @@ def badge_listen():
         print 'Got connection from', addr
         #~ last_badge_timestamp = time.time()
         #~ badge_read_pending = True
+        q.put(time.time())
+        #~ print "badge pending: {}".format(badge_read_pending)
         
         try:
             data = c.recv(1024)
@@ -344,19 +348,26 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
 	cv2.putText(image, door3open and "door 3 open" or "door 3 closed",(10,500 + 150), font, 1,door3open and (0,255,0) or (0, 0, 255) ,2,cv2.CV_AA)
  
 	# show the frame
-	cv2.imshow("Frame", image)
-	cv2.setMouseCallback("Frame",draw_circle)
+	#~ cv2.imshow("Frame", image)
+	#~ cv2.setMouseCallback("Frame",draw_circle)
  
 	# clear the stream in preparation for the next frame
 	rawCapture.truncate(0)
 	
-	# CHECK IF SONG NEEDS TO BE PLAYED
-	#~ if badge_read_pending:
-		#~ print "time since badge scan: {}".format(time.time() - last_badge_timestamp)
-	#~ if badge_read_pending and time.time() - last_badge_timestamp > buffer_wait_time:
-		#~ if door1open or door2open or door3_open:
-			#~ badge_read_pending = False			
-			#~ file = "jungle-intro.wav" #"kanye-west-power-intro.wav"
-			#~ os.system("omxplayer --no-keys {} &".format(file))
-			#~ print "entrance theme played!"
+	#~ # CHECK IF SONG NEEDS TO BE PLAYED
+	#~ print "queue:", q.empty()
+	if not q.empty():
+		last_badge_timestamp = q.get()
+		badge_read_pending = True
+		print "msg received"
+	#~ print "pending: {}".format(badge_read_pending)
+	if badge_read_pending:
+		print "time since badge scan: {}".format(time.time() - last_badge_timestamp)
+	if badge_read_pending and time.time() - last_badge_timestamp > buffer_wait_time:
+		if door1open or door2open or door3open:
+			badge_read_pending = False
+			print "entrance theme played!"			
+			file = "jungle-intro.wav" #"kanye-west-power-intro.wav"
+			os.system("omxplayer --no-keys {} &".format(file))
+			
 			
