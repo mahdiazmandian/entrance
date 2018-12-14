@@ -12,13 +12,22 @@ import colorsys
 from fractions import Fraction
 import socket, time
 from threading import Thread
+from playsound import playsound
 
 verbose = False
+
+badge_read_pending = False
+last_badge_timestamp = -1
+buffer_wait_time = 20 #wait this long after badge is scanned to look trigger song
+
 
 def badge_listen():
 
     # next create a socket object
     s = socket.socket()
+    #~ s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    #~ s.setsockopt(socket.SOL_SOCKET, 25, 'wlan0')
+    
     print "Socket successfully created"
 
     # reserve a port on your computer in our
@@ -31,6 +40,8 @@ def badge_listen():
     # this makes the server listen to requests
     # coming from other computers on the network
     s.bind(('', port))
+    #~ s.bind(('172.26.204.205', port))
+    #~ s.bind(('wlan0', port))
     print "socket binded to %s" % (port)
 
     # put the socket into listening mode
@@ -43,7 +54,9 @@ def badge_listen():
         # Establish connection with client.
         c, addr = s.accept()
         print 'Got connection from', addr
-
+        #~ last_badge_timestamp = time.time()
+        #~ badge_read_pending = True
+        
         try:
             data = c.recv(1024)
             print data
@@ -283,8 +296,16 @@ door3open = False
 
 Thread(target=badge_listen, args=()).start()
 
+#~ counter = 0
+#~ while True:
+    #~ print counter
+    #~ time.sleep(1)
+    #~ counter = counter + 1
+
 # capture frames from the camera
 for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
+	
+	
 	# grab the raw NumPy array representing the image, then initialize the timestamp
 	# and occupied/unoccupied text
 	image = frame.array
@@ -328,3 +349,14 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
  
 	# clear the stream in preparation for the next frame
 	rawCapture.truncate(0)
+	
+	# CHECK IF SONG NEEDS TO BE PLAYED
+	#~ if badge_read_pending:
+		#~ print "time since badge scan: {}".format(time.time() - last_badge_timestamp)
+	#~ if badge_read_pending and time.time() - last_badge_timestamp > buffer_wait_time:
+		#~ if door1open or door2open or door3_open:
+			#~ badge_read_pending = False			
+			#~ file = "jungle-intro.wav" #"kanye-west-power-intro.wav"
+			#~ os.system("omxplayer --no-keys {} &".format(file))
+			#~ print "entrance theme played!"
+			
