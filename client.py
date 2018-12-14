@@ -3,7 +3,7 @@ import socket
 import time
 
 port = 65432
-addr = '127.0.0.1'
+addr = '172.26.204.205' # '127.0.0.1'
 
 def sendBadgeInfo (badgeID):
     s = socket.socket()

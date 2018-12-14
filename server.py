@@ -6,6 +6,9 @@ def badge_listen():
 
     # next create a socket object
     s = socket.socket()
+    #~ s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    #~ s.setsockopt(socket.SOL_SOCKET, 25, 'wlan0')
+    
     print "Socket successfully created"
 
     # reserve a port on your computer in our
@@ -18,6 +21,8 @@ def badge_listen():
     # this makes the server listen to requests
     # coming from other computers on the network
     s.bind(('', port))
+    #~ s.bind(('172.26.204.205', port))
+    #~ s.bind(('wlan0', port))
     print "socket binded to %s" % (port)
 
     # put the socket into listening mode

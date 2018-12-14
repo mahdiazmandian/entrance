@@ -10,6 +10,48 @@ import numpy as np
 import math
 import colorsys
 from fractions import Fraction
+import socket, time
+from threading import Thread
+
+verbose = False
+
+def badge_listen():
+
+    # next create a socket object
+    s = socket.socket()
+    print "Socket successfully created"
+
+    # reserve a port on your computer in our
+    # case it is 12345 but it can be anything
+    port = 65432
+
+    # Next bind to the port
+    # we have not typed any ip in the ip field
+    # instead we have inputted an empty string
+    # this makes the server listen to requests
+    # coming from other computers on the network
+    s.bind(('', port))
+    print "socket binded to %s" % (port)
+
+    # put the socket into listening mode
+    s.listen(5)
+    print "socket is listening"
+
+    # a forever loop until we interrupt it or
+    # an error occurs
+    while True:
+        # Establish connection with client.
+        c, addr = s.accept()
+        print 'Got connection from', addr
+
+        try:
+            data = c.recv(1024)
+            print data
+        except:
+            print "client left"
+            break
+        # # Close the connection with the client
+        c.close()
 
 testMode = False
 
@@ -104,10 +146,11 @@ def check_door_open(door_num, img):
 			closeC = col_close3
 	
 	currR, currG, currB = getAverageColorOfBox('', img, midX, midY, boxX, boxY)
-	print "Door {}".format(door_num)
-	print "Open: ({}, {}, {})".format(openC[0], openC[1], openC[2])
-	print "Close: ({}, {}, {})".format(closeC[0], closeC[1], closeC[2])
-	print "Curr: ({}, {}, {})".format(currR, currG, currB)
+	if verbose:
+		print "Door {}".format(door_num)
+		print "Open: ({}, {}, {})".format(openC[0], openC[1], openC[2])
+		print "Close: ({}, {}, {})".format(closeC[0], closeC[1], closeC[2])
+		print "Curr: ({}, {}, {})".format(currR, currG, currB)
 	
 	#~ openH = colorsys.rgb_to_hls(openC[2]/255, openC[1]/255, openC[0]/255)
 	#~ closeH = colorsys.rgb_to_hls(closeC[2]/255, closeC[1]/255, closeC[0]/255)
@@ -119,9 +162,10 @@ def check_door_open(door_num, img):
 	
 	#~ print 
 	
-	print "OpenH: {}".format(openH)
-	print "CloseH: {}".format(closeH)
-	print "CurrH: {}".format(currH)
+	if verbose:
+		print "OpenH: {}".format(openH)
+		print "CloseH: {}".format(closeH)
+		print "CurrH: {}".format(currH)
 	
 	openDist = abs(openH - currH)
 	closeDist = abs(closeH - currH)
@@ -236,7 +280,9 @@ font = cv2.FONT_HERSHEY_SIMPLEX
 door1open = False
 door2open = True
 door3open = False
- 
+
+Thread(target=badge_listen, args=()).start()
+
 # capture frames from the camera
 for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
 	# grab the raw NumPy array representing the image, then initialize the timestamp
