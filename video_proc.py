@@ -190,8 +190,8 @@ def check_door_open(door_num, img):
 	#~ openDist = 0
 	#~ closeDist = 0
 	
-	#~ openDist = getColorDist(currR, currG, currB, openC[0], openC[1], openC[2])
-	#~ closeDist = getColorDist(currR, currG, currB, closeC[0], closeC[1], closeC[2],)
+	openDist = getColorDist(currR, currG, currB, openC[0], openC[1], openC[2])
+	closeDist = getColorDist(currR, currG, currB, closeC[0], closeC[1], closeC[2],)
     #~ print 'open dist: {}'.format(openDist)
     #~ print 'close dist: {}'.format(closeDist)
     #~ print 'open dist: {}'.format(openDist)
@@ -272,7 +272,7 @@ if not testMode:
 	time.sleep(2)
 	# Now fix the values
 	#~ camera.shutter_speed = camera.exposure_speed
-	camera.shutter_speed = 2 * 33318
+	camera.shutter_speed = 8 * 33318
 	#~ print "speed: {}".format(camera.shutter_speed)
 	camera.exposure_mode = 'off'
 	#~ g = camera.awb_gains
@@ -348,7 +348,7 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
 	cv2.putText(image, door3open and "door 3 open" or "door 3 closed",(10,500 + 150), font, 1,door3open and (0,255,0) or (0, 0, 255) ,2,cv2.CV_AA)
  
 	# show the frame
-	#~ cv2.imshow("Frame", image)
+	cv2.imshow("Frame", image)
 	#~ cv2.setMouseCallback("Frame",draw_circle)
  
 	# clear the stream in preparation for the next frame
@@ -356,13 +356,14 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
 	
 	#~ # CHECK IF SONG NEEDS TO BE PLAYED
 	#~ print "queue:", q.empty()
+	#~ print "Doors ({}, {}, {})".format(door1open, door2open, door3open)
 	if not q.empty():
 		last_badge_timestamp = q.get()
 		badge_read_pending = True
 		print "msg received"
 	#~ print "pending: {}".format(badge_read_pending)
-	if badge_read_pending:
-		print "time since badge scan: {}".format(time.time() - last_badge_timestamp)
+	#~ if badge_read_pending:
+		#~ print "time since badge scan: {}".format(time.time() - last_badge_timestamp)
 	if badge_read_pending and time.time() - last_badge_timestamp > buffer_wait_time:
 		if door1open or door2open or door3open:
 			badge_read_pending = False
